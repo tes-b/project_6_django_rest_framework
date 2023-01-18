@@ -49,7 +49,7 @@ DATABASES = {
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [env('DB_HOST')]
 
 
 # Application definition
