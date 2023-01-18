@@ -7,3 +7,4 @@ urlpatterns = [
     path('register/', views.register),
     path('read/<article_id>',views.read)
 ]
+'123'
