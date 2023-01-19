@@ -17,6 +17,7 @@ import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')  
 
 # READ .ENV
 env = environ.Env(DEBUG=(bool, True))
@@ -62,6 +63,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "django_bootstrap5",
+    'bbs.apps.BbsConfig',
 ]
 
 # DRF setting
@@ -89,7 +92,7 @@ ROOT_URLCONF = "cp2_rest.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR/'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

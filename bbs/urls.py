@@ -6,4 +6,5 @@ urlpatterns = [
     path('write/', views.write),
     path('register/', views.register),
     path('read/<article_id>',views.read)
+    # path('base/>',views.base)
 ]
