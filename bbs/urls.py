@@ -2,9 +2,12 @@ from django.urls import path
 from bbs import views
 
 urlpatterns = [
-    path('', views.index),
-    path('write/', views.write),
-    path('register/', views.register),
-    path('read/<article_id>',views.read)
-    # path('base/>',views.base)
+    path('', views.list),
+    path('bbs/write', views.write),
+    path('bbs/list', views.list),
+
+    # path('register/', views.register),
+    # path('bbs/<article_id>',views.read),
+    # path('getpostpage', views.getpostpage),
+    # path('test/getpost', views.postdata),
 ]
