@@ -9,8 +9,8 @@
 </head>
 
 <body>
-    <table>
-        <thead>
+    <table border="1" style="width:50%" align="center">
+        <thead align="center">
             <th>글 번호</th>
             <th>유저번호</th>
             <th>제목</th>
@@ -19,10 +19,10 @@
 
         {% if posts %}
         {% for post in posts %}
-        <tr>
+        <tr align="center">
             <td>{{ post.post_number }}</td>
             <td>{{ post.id }}</td>
-            <td>{{ post.title }}</td>
+            <td><A href="../read/{{ post.post_number }}" target=_self>{{ post.title }}</A></td>
             <td>{{ post.posting_time }}</td>
         </tr>
         {% endfor %}

@@ -23,17 +23,28 @@ def write(request):
     form = PostForm(request.POST or None)
 
     if request.method == "POST":
-        # print("write POST")
+        print("write POST")
         
         if form.is_valid():
-            # print("Something wrong")
+            print("VALID")
             post = form.save(commit=False)
             post.save()
-        return redirect("/bbs/write")
+        return redirect("/bbs/list/")
 
-    # print("write GET")
+    print("write GET")
     context = {'postForm': form}
     return render(request, "bbs/write.html", context)
+
+def read(request, post_num):
+    post = Board.objects.get(post_number=post_num)
+    context = {'post':post}
+    return render(request, "bbs/read.html", context)
+
+def delete(request, post_num):
+    post = Board.objects.get(post_number=post_num)
+    post.delete()
+    return redirect("/bbs/list/")
+
 
 # 테스트
 # def postdata(request):
