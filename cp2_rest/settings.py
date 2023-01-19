@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "accounts"  #로그인, 로그아웃, 회원가입
 ]
 
 # DRF setting
@@ -151,3 +152,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+#로그인 후 이동할 페이지 옵션, 로그인 후 메인 페이지로 이동함
+LOGIN_REDIRECT_URL='/'
