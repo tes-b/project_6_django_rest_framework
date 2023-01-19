@@ -50,7 +50,8 @@ DATABASES = {
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
-ALLOWED_HOSTS = [env('DB_HOST')]
+ALLOWED_HOSTS = ['*',] # 태섭 : 모든 아이피 접근 허용
+# ALLOWED_HOSTS = [env('DB_HOST')]
 
 
 # Application definition
@@ -64,7 +65,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_bootstrap5",
-    'bbs.apps.BbsConfig',
+    # "bbs.apps.BbsConfig",
+    "bbs",
     "accounts"  #로그인, 로그아웃, 회원가입
 ]
 

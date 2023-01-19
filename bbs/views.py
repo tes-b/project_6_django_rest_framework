@@ -8,7 +8,7 @@ def index(request):
     # template = loader.get_template('bbs/index.html')
     # context = {}
     # return HttpResponse(template.render(context,request))
-    return render(request, "index.html")
+    return render(request, "bbs/index.html")
 
 def write(request):
     return HttpResponse('Write')
@@ -18,6 +18,3 @@ def register(request):
 
 def read(request, article_id):
     return HttpResponse('Read' + article_id)
-
-def base(request):
-    return HttpResponse('../templates/base.html')
