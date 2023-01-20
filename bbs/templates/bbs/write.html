@@ -9,8 +9,29 @@
 <body>
     <form method="POST">
         {% csrf_token %}
-        {{ postForm }}
-        <button>저장</button>
+        <p align="center" style="font-size:2rem;">글쓰기</p>
+        <table border="1" style="width:50%" align="center">
+            <tr align="center">
+                <td colspan="2">{{postForm.id}}</td>
+            </tr>
+            <tr align="center">
+                <td colspan="2">{{postForm.title}}</td>
+            </tr>
+            <tr align="center" style="height:50vh">
+                <td colspan="2">{{postForm.contents}}</td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="button" onclick="location.href='../list'">목록</button>
+                </td>
+                <td>
+                    <button>저장</button>
+                </td>
+            </tr>
+        </table>
+        
+        <!-- {{ postForm }} -->
+        <!-- <button>저장</button> -->
     </form>
 </body>
 </html>

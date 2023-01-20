@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.template import loader
-from bbs.write import PostForm
+from bbs.form import PostForm
 from bbs.models import Board, Users
 
 
