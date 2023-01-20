@@ -26,13 +26,3 @@ class Users(models.Model):
     class Meta:
         managed = False
         db_table = 'Users'
-
-
-class Test(models.Model):
-    post_number = models.AutoField(primary_key=True)
-    contents = models.CharField(max_length=1000, blank=True, null=True)
-    id = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'test'

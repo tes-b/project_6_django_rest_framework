@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/bbs/write/" method="POST">
+    <form method="POST">
         {% csrf_token %}
         {{ postForm }}
         <button>저장</button>
