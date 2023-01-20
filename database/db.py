@@ -7,7 +7,7 @@ dont you, then error occurs -> InterfaceError: (0, ""). please, connect and clos
 
 hostname = 'localhost'
 username = 'root'
-userpassword = 'root'
+userpassword = '1234'
 enc_type = 'utf8mb4'
 
 conn_db = pymysql.connect(host = hostname,
@@ -16,7 +16,7 @@ conn_db = pymysql.connect(host = hostname,
                           charset = enc_type)
 
 cur = conn_db.cursor()
-
+ 
 create_db_query = '''
 create database bbs
 '''
@@ -30,7 +30,7 @@ create table BBS.Users(
     age integer,
     gender char(10),
     email varchar(50),
-    registration_date date,
+    registration_date timestamp default current_timestamp,
     latest_login date
 )
 '''
@@ -39,8 +39,9 @@ create_board_table_query = '''
 create table BBS.Board(
     post_number int not null auto_increment primary key,
     id varchar(100),
+    title varchar(100) not null,
     contents varchar(1000),
-    foreign key (id) references BBS.Users (id) on update cascade
+    foreign key (id) references BBS.Users (member_number) on update cascade
 )
 '''
 
