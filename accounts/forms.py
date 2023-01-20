@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django import forms
 from .models import Users
+from argon2 import PasswordHasher
 #회원가입 양식폼 
 
 class RegisterForm(forms.ModelForm):
@@ -18,7 +19,5 @@ class RegisterForm(forms.ModelForm):
         cd = self.cleaned_data
         if cd['password'] != cd['password2']:
             raise forms.ValidationError('Passwords not matched')
-        return cd['password']
-    
-# hex(aes_encrypy(password, 'key')) -> encode
-# aes_decrypt(unhex(password), 'key') -> decode        
+        cd['password']=PasswordHasher().hash(cd['password'])
+        return cd['password'] 
