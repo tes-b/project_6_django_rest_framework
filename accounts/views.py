@@ -1,20 +1,18 @@
-from django.shortcuts import render
-from .forms import RegisterForm
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from accounts.forms import UserForm
 
 
-
-#회원가입 기능
-def register(request):
-    if request.method == 'POST':
-        user_form= RegisterForm(request.POST) #forms.py에서 가져온 형식
-        if user_form.is_valid():
-            new_user = user_form.save() #비밀번호 데이터상 저장 x, commit=False시 메모리만 할당
-            # new_user.set_password(user_form.cleaned_data['password']) #비밀번호 암호화
-            # new_user.save() #원래 User 클래스 사용시 ->set_password 써서 암호화 시킨다음 저장함
-
-
-            return render(request, 'registration/register_done.html',{'new_user':new_user})
+def signup(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username = username, password = raw_password)  # 사용자 인증
+            login(request, user)  # 로그인
+            return redirect('index')
     else:
-            user_form = RegisterForm() #자료를 다 전달받지 않으면 입력 화면을 보여주도록 한다
-    
-    return render(request, 'registration/register.html',{'form':user_form})
+        form = UserForm()
+    return render(request, 'accounts/signup.html', {'form': form})
