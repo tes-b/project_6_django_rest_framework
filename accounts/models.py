@@ -33,7 +33,7 @@ class User(AbstractUser): # Add Custom indexes by 태섭
     is_superuser = models.BooleanField(default=False)
     # is_admin = models.BooleanField(default=False)
 
-    # objects = UserManager()
+    objects = UserManager()
 
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
