@@ -50,6 +50,7 @@ DATABASES = {
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
+
 ALLOWED_HOSTS = ['*',] #accesible to all ip
 
 
@@ -65,7 +66,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "django_bootstrap5",
     'board.apps.BoardConfig',
-    'accounts.apps.AccountsConfig'
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,6 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
+
+
+AUTH_USER_MODEL = 'accounts.User' # auth_user 모델 커스텀 by 태섭
