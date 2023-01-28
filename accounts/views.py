@@ -32,11 +32,11 @@ def signup(request):
         return render(request=request, template_name='accounts/signup.html')
 
     elif request.method == 'POST':
-        # print(request.POST)
-        data = request.POST
-        user_serializer = UserSerializer()
-        user = user_serializer.create(data)
-        user.save()
+        user_serializer = UserSerializer(data=request.POST)
+        if user_serializer.is_valid():
+            user_serializer.save()
+        else :
+            raise user_serializer.errors
 
         return redirect('index')
 

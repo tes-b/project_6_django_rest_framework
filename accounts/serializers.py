@@ -1,19 +1,34 @@
 from rest_framework import serializers
 from .models import User
+from django.core.exceptions import ValidationError
+from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
+
+    email = serializers.EmailField(required=True)
+    username = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    age = serializers.IntegerField()
+    gender = serializers.CharField()
+    password1 = serializers.CharField(required=True)
+    password2 = serializers.CharField(required=True)
+
     def create(self, validated_data):
+        
         user = User.objects.create_user(
-            username=validated_data['username'], 
-            first_name=validated_data['first_name'], 
-            last_name=validated_data['last_name'], 
-            email=validated_data['email'], 
-            age=validated_data['age'], 
-            gender=validated_data['gender'], 
-            password=validated_data['password1']
+            username=validated_data['username'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            email=validated_data['email'],
+            age=validated_data['age'],
+            gender=validated_data['gender'],
+            password=validated_data['password1'],
         )
         return user
+
     class Meta:
         model = User
         # fields = '__all__'
-        fields = ['username', 'password', 'first_name','last_name','email','age','gender']
+        fields = ['username', 'password1', 'password2', 'first_name',
+                  'last_name', 'email', 'age', 'gender']
