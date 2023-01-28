@@ -11,6 +11,7 @@ from rest_framework.response import Response
 
 from rest_framework.views import APIView
 from rest_framework import generics
+from django.core.exceptions import ValidationError
 
 # def signup(request):
 #     if request.method == "POST":
@@ -36,7 +37,7 @@ def signup(request):
         if user_serializer.is_valid():
             user_serializer.save()
         else :
-            raise user_serializer.errors
+            raise ValidationError(user_serializer.errors)
 
         return redirect('index')
 
