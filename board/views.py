@@ -4,6 +4,9 @@ from django.utils import timezone
 from .forms import QuestionForm, AnswerForm
 from django.core.paginator import Paginator  
 from django.contrib.auth.decorators import login_required
+from .serializers import QuestionSerializer, QuestionManage
+from django.core.exceptions import ValidationError
+from django.http import QueryDict
 
 def index(request):
     page = request.GET.get('page', '1')  # 페이지
@@ -30,6 +33,7 @@ def answer_create(request, question_id): # 둘 중 하나 쓰면 됨.
     """
     question = get_object_or_404(Question, pk = question_id)
     if request.method == "POST":
+        
         form = AnswerForm(request.POST)
         if form.is_valid():
             answer = form.save(commit = False)
@@ -46,17 +50,21 @@ def answer_create(request, question_id): # 둘 중 하나 쓰면 됨.
 
 @login_required(login_url = 'accounts:login')
 def question_create(request):
-    if request.method == 'POST':
-        form = QuestionForm(request.POST)
-        
-        if form.is_valid():
-            question = form.save(commit = False)
-            question.author = request.user  # author 속성에 로그인 계정 저장
-            question.create_date = timezone.now()
-            question.save()
-            return redirect('board:index')
-    else:
+    
+    if request.method == 'GET':
         form = QuestionForm()
+        # return render(request=request, template_name='accounts/signup.html')
+
+    elif request.method == 'POST':
+        inittial_data = QueryDict(
+            f"csrfmiddlewaretoken={request.POST['csrfmiddlewaretoken']}&title={request.POST['title']}&content={request.POST['content']}&author_id={request.user.id}")
+        question_serializer = QuestionSerializer(data=inittial_data)
+        if question_serializer.is_valid():
+            question_serializer.save()
+        else :
+            raise ValidationError(question_serializer.errors) 
+
+        return redirect('index')
     
     context = {'form': form}
     return render(request, 'board/question_form.html', context)
