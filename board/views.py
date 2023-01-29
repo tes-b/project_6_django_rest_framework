@@ -4,7 +4,7 @@ from django.utils import timezone
 from .forms import QuestionForm, AnswerForm
 from django.core.paginator import Paginator  
 from django.contrib.auth.decorators import login_required
-from .serializers import QuestionSerializer, QuestionManage
+from .serializers import QuestionSerializer, AnswerSerializer
 from django.core.exceptions import ValidationError
 from django.http import QueryDict
 
@@ -28,25 +28,44 @@ def detail(request, question_id):
 
 @login_required(login_url = 'accounts:login')
 def answer_create(request, question_id): # 둘 중 하나 쓰면 됨.
-    """
-    board answer_apply
-    """
     question = get_object_or_404(Question, pk = question_id)
-    if request.method == "POST":
-        
-        form = AnswerForm(request.POST)
-        if form.is_valid():
-            answer = form.save(commit = False)
-            answer.author = request.user  # author 속성에 로그인 계정 저장
-            answer.create_date = timezone.now()
-            answer.question = question
-            answer.save()
-            return redirect('board:detail', question_id = question.id)
-    else:
+    if request.method == "GET":
         form = AnswerForm()
+        context = {'question': question, 'form': form}
+        return render(request, 'board/question_detail.html', context)
+        
+    elif request.method == "POST":
+
+        initial_data = QueryDict(
+            f"csrfmiddlewaretoken={request.POST['csrfmiddlewaretoken']}&question_id={question_id}&content={request.POST['content']}&author_id={request.user.id}")
+        answer_serializer = AnswerSerializer(data=initial_data)
+
+        if answer_serializer.is_valid():
+            answer_serializer.save()
+        else: 
+            raise ValidationError(answer_serializer.errors)
+        
+        return redirect('board:detail', question_id = question.id)
+
+    """
+    regacy code >>
+    """
+    # question = get_object_or_404(Question, pk = question_id)
+    # if request.method == "POST":
+        
+    #     form = AnswerForm(request.POST)
+    #     if form.is_valid():
+    #         answer = form.save(commit = False)
+    #         answer.author = request.user  # author 속성에 로그인 계정 저장
+    #         answer.create_date = timezone.now()
+    #         answer.question = question
+    #         answer.save()
+    #         return redirect('board:detail', question_id = question.id)
+    # else:
+    #     form = AnswerForm()
     
-    context = {'question': question, 'form': form}
-    return render(request, 'board/question_detail.html', context)
+    # context = {'question': question, 'form': form}
+    # return render(request, 'board/question_detail.html', context)
 
 @login_required(login_url = 'accounts:login')
 def question_create(request):
@@ -54,6 +73,8 @@ def question_create(request):
     if request.method == 'GET':
         form = QuestionForm()
         # return render(request=request, template_name='accounts/signup.html')
+        context = {'form': form}
+        return render(request, 'board/question_form.html', context)
 
     elif request.method == 'POST':
         inittial_data = QueryDict(
@@ -66,6 +87,20 @@ def question_create(request):
 
         return redirect('index')
     
-    context = {'form': form}
-    return render(request, 'board/question_form.html', context)
+    return redirect('index')
 
+    """
+    regacy code >>
+    """
+    # if request.method == 'POST':
+    #     form = QuestionForm(request.POST)
+
+    #     if form.is_valid():
+    #         question = form.save(commit = False)
+    #         question.author = request.user  # author 속성에 로그인 계정 저장
+    #         question.create_date = timezone.now()
+    #         question.save()
+    #         return redirect('board:index')
+    # else:
+    #     context = {'form': form}
+    # return render(request, 'board/question_form.html', context)

@@ -1,18 +1,5 @@
 from rest_framework import serializers
-from .models import Question
-from django.utils import timezone
-from rest_framework.fields import empty
-
-
-class QuestionManage():
-    def create_question(self, request):
-        question_serializer = QuestionSerializer()   
-        question_serializer.title = request.POST['title']
-        question_serializer.content=request.POST['content']
-        question_serializer.create_date=timezone.now()
-        question_serializer.author_id=request.user.id      
-
-        return question_serializer
+from .models import Question, Answer
 
 class QuestionSerializer(serializers.ModelSerializer):
     
@@ -22,15 +9,31 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     def create(self,validated_data):
         question = Question.objects.create(
-            title=self.validated_data['title'],
-            content=self.validated_data['content'], 
-            author_id=self.validated_data['author_id'])
+            title=validated_data['title'],
+            content=validated_data['content'], 
+            author_id=validated_data['author_id'])
         return question
-
-    # def save(self):
-    #     print(self.validated_data)
 
     class Meta:
         model = Question
         # fields = '__all__'
         fields = ['author_id','title','content']
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+
+    author_id = serializers.IntegerField()
+    question_id = serializers.IntegerField()
+    content = serializers.CharField()
+
+    def create(self,validated_data):
+        answer = Answer.objects.create(
+            author_id=validated_data['author_id'],
+            question_id=validated_data['question_id'],
+            content=validated_data['content'])
+        return answer
+
+    class Meta:
+        model = Answer
+        # fields = '__all__'
+        fields = ['author_id','question_id','content']
