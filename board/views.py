@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from .serializers import QuestionSerializer, AnswerSerializer
 from django.core.exceptions import ValidationError
 from django.http import QueryDict
+import logging 
+
+logger = logging.getLogger('json_logger')
 
 def index(request):
     page = request.GET.get('page', '1')  # 페이지
@@ -14,6 +17,8 @@ def index(request):
     paginator = Paginator(question_list, 10)  # 페이지당 10개씩 보여주기
     page_obj = paginator.get_page(page)
     context = {'question_list': page_obj}
+    logger.info("GET access Board List", extra={'request':request})
+
     return render(request, 'board/question_list.html', context)
 
 def detail(request, question_id):
@@ -44,7 +49,8 @@ def answer_create(request, question_id): # 둘 중 하나 쓰면 됨.
             answer_serializer.save()
         else: 
             raise ValidationError(answer_serializer.errors)
-        
+        logger.info("POST access BOARD_ANSWER Creation", extra={'request':request})
+
         return redirect('board:detail', question_id = question.id)
 
     """
@@ -82,6 +88,8 @@ def question_create(request):
         question_serializer = QuestionSerializer(data=inittial_data)
         if question_serializer.is_valid():
             question_serializer.save()
+            logger.info("POST access BOARD_QUESTION Creation", extra={'request':request})
+
         else :
             raise ValidationError(question_serializer.errors) 
 
