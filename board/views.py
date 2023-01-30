@@ -35,14 +35,12 @@ def answer_create(request, question_id): # 둘 중 하나 쓰면 됨.
         return render(request, 'board/question_detail.html', context)
         
     elif request.method == "POST":
+        # 시리얼라이저 생성
+        answer_serializer = AnswerSerializer(data=request.POST)
 
-        initial_data = QueryDict(
-            f"csrfmiddlewaretoken={request.POST['csrfmiddlewaretoken']}&question_id={question_id}&content={request.POST['content']}&author_id={request.user.id}")
-        answer_serializer = AnswerSerializer(data=initial_data)
-
-        if answer_serializer.is_valid():
-            answer_serializer.save()
-        else: 
+        if answer_serializer.is_valid(): # 내용 검사
+            answer_serializer.save() # 저장
+        else: # 내용에 문제 있을 때
             raise ValidationError(answer_serializer.errors)
         
         return redirect('board:detail', question_id = question.id)
@@ -77,11 +75,11 @@ def question_create(request):
         return render(request, 'board/question_form.html', context)
 
     elif request.method == 'POST':
-        inittial_data = QueryDict(
-            f"csrfmiddlewaretoken={request.POST['csrfmiddlewaretoken']}&title={request.POST['title']}&content={request.POST['content']}&author_id={request.user.id}")
-        question_serializer = QuestionSerializer(data=inittial_data)
-        if question_serializer.is_valid():
-            question_serializer.save()
+        # 시리얼라이저 생성
+        question_serializer = QuestionSerializer(data=request.POST)
+        
+        if question_serializer.is_valid(): # 내용 검사
+            question_serializer.save() # 저장
         else :
             raise ValidationError(question_serializer.errors) 
 
