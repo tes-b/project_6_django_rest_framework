@@ -40,4 +40,5 @@ dependencies:
     - argon2-cffi==21.3.0
     - argon2-cffi-bindings==21.2.0
     - python-json-logger==2.0.4
+    - pyjwt==1.4.2
 prefix: /home/tesb/anaconda3/envs/cp2

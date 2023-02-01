@@ -69,11 +69,7 @@ INSTALLED_APPS = [
     "django_bootstrap5",
     'board.apps.BoardConfig',
     'accounts.apps.AccountsConfig',
-<<<<<<< HEAD
     'dashboard.apps.DashboardConfig',
-=======
-    'rest_framework_simplejwt', # JWT 추가 by 태섭
->>>>>>> 615ad18e26e4230dc33f72044fd94aeca3a42be4
 ]
 
 MIDDLEWARE = [
