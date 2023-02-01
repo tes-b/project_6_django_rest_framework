@@ -7,6 +7,14 @@ from django.contrib.auth.decorators import login_required
 from .serializers import QuestionSerializer, AnswerSerializer
 from django.core.exceptions import ValidationError
 from django.http import QueryDict
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+
+from .permissions import IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly, IsStaffOrReadOnly
+
 import logging 
 
 logger = logging.getLogger('json_logger')
@@ -109,3 +117,70 @@ def question_create(request):
     # else:
     #     context = {'form': form}
     # return render(request, 'board/question_form.html', context)
+
+
+class BoardAPIView(ListAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        print("BoardAPIView_perform_create")# PROCESS CHEK
+        serializer.save(user=self.request.user)
+
+    def list(self, request, *args, **kwargs):
+        print("BoardAPIView_list")# PROCESS CHEK
+        print("BoardAPIView_list_self.get_queryset : ",self.get_queryset())# PROCESS CHEK
+        queryset = self.filter_queryset(self.get_queryset())
+        print("BoardAPIView_list_queryset : ",queryset)# PROCESS CHEK
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page,many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset,many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        print("BoardAPIView_create")# PROCESS CHEK
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class BoardDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    # permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     instance.hit += 1 # 조회수 1 증가
+    #     instance.save()
+    #     serializer = self.get_serializer(instance)
+    #     return Response(serializer.data)
+
+    def update(self, request, * args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_object_cache', None):
+            instance._prefetched_object_cache = {}
+
+        return Response(serializer.data)
+
+    def partial_update(self,request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
