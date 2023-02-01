@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 import pymysql
 import environ
+from datetime import timedelta
+from .log import CustomisedJSONFormatter
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,7 +69,11 @@ INSTALLED_APPS = [
     "django_bootstrap5",
     'board.apps.BoardConfig',
     'accounts.apps.AccountsConfig',
+<<<<<<< HEAD
     'dashboard.apps.DashboardConfig',
+=======
+    'rest_framework_simplejwt', # JWT 추가 by 태섭
+>>>>>>> 615ad18e26e4230dc33f72044fd94aeca3a42be4
 ]
 
 MIDDLEWARE = [
@@ -147,3 +153,98 @@ LOGIN_REDIRECT_URL = '/'
 
 
 AUTH_USER_MODEL = 'accounts.User' # auth_user 모델 커스텀 by 태섭
+
+# JWT 추가 by 태섭
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+REST_USE_JWT = True
+
+# 추가적인 JWT_AUTH 설정
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': ALGORITHM,
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+
+# JWT_AUTH_COOKIE = 'my-app-auth'
+# JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format' : "[%(asctime)s] %(levelname)s %(name)s:%(lineno)s %(message)s",
+            'datefmt' : "%Y-%m-%d %H:%M:%S"
+        },
+        'json': {
+            '()': CustomisedJSONFormatter,
+        }
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+         'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+          'log_file1': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/log_file1.log',
+            'formatter': 'standard',
+        },
+        'json_logger': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/json_logger.log',
+            'formatter': 'json',
+        },
+    },
+    'loggers': {
+         'log_file1': {
+            'handlers': ['log_file1'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'json_logger': {
+            'handlers': ['json_logger'],
+            'level': 'INFO',
+            'propagate': False,
+        }
+    }
+}
