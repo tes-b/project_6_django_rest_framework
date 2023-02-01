@@ -2,16 +2,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from test_web.settings import AUTH_USER_MODEL
+from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
     def create_user(self, username, first_name, last_name, email, age=None, gender=None, password=None):
         if not email:
             raise ValueError('must have user email')
-        # if not ni:
-        #     raise ValueError('must have user nickname')
-        # if not name:
-        #     raise ValueError('must have user name')
+
         user = self.model(
             username=username, 
             first_name=first_name, 
@@ -49,6 +47,8 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractUser): # Add Custom indexes by 태섭
+    
+    username = models.CharField(max_length=30, unique=True, null=False, blank=False)
     age = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=10, null=True, choices=[('Male','male'),('Female','female'),('Other','other')])
 
@@ -67,7 +67,16 @@ class User(AbstractUser): # Add Custom indexes by 태섭
         swappable = 'AUTH_USER_MODEL'
 
     def save(self, *args, **kwargs):
+        print("User_save : ", self.username)
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
     def __str__(self):
         return self.username
+
+def update_last_login(sender, user, **kwargs):
+    """
+    A signal receiver which updates the last_login date for
+    the user logging in.
+    """
+    user.last_login = timezone.now()
+    user.save(update_fields=["last_login"])
