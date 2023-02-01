@@ -23,5 +23,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('', views.index, name = 'index'),
     # restapi
-    path('api-auth/', include('rest_framework.urls'))
+    path('api-auth/', include('rest_framework.urls')),
+    # dashboard
+    path('dashboard/', include('dashboard.urls'))
 ]
