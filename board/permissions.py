@@ -2,6 +2,22 @@ from django.conf import settings
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 import jwt
 
+class AllowAny(BasePermission):
+    """
+    모든 유저 가능
+    """
+    def has_permission(self, request, view):
+        return True
+
+class IsAuthenticated(BasePermission):
+    """
+    로그인한 유저만 접근 가능
+    """
+    def has_permission(self, request, view):
+        # print("IsAuthenticated_has_permsiion", request) # PROCESS CHEK
+        
+        return bool(request.user and request.user.is_authenticated)
+
 
 class IsAuthenticatedOrReadOnly(BasePermission):
     """
@@ -11,6 +27,8 @@ class IsAuthenticatedOrReadOnly(BasePermission):
     message = "[Access Denied: ERR01] 접근 권한이 없습니다."
 
     def has_permission(self, request, view):
+        # print("IsAuthenticatedOrReadOnly_has_permsiion", request) # PROCESS CHEK
+
         return bool(
             request.method in SAFE_METHODS or 
             request.user and 
@@ -19,7 +37,7 @@ class IsAuthenticatedOrReadOnly(BasePermission):
 
 class IsAuthorOrReadOnly(BasePermission):
     """
-    작성자 외 읽기 권한 부여
+    인증되지 않은 사용자는 읽기만 가능
     JWT 토큰을 decode, obj의 user와 해당 user가 일치하는지 확인
     """
 
@@ -47,3 +65,18 @@ class IsStaffOrReadOnly(BasePermission):
             return True
         else:
             return bool(request.user and request.user_is_staff)
+
+class IsAuthorOrStaffOrReadOnly(BasePermission):
+    """
+    SAFE_METHODS 만 허용
+    작성자와 스텝만 허용
+    """
+
+    message = "[Access Denied: ERR03] 작성자와 스텝 외 게시글 수정, 삭제 권한이 없습니다."
+
+    def has_object_permission(self, request, view, obj):
+        # print("IsAuthorOrStaff_has_object_permission") # PROCESS CHECK
+        if request.method in SAFE_METHODS:
+            return True    
+        else:        
+            return bool((request.user.id == obj.author_id) or request.user.is_staff)

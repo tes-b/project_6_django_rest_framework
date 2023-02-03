@@ -4,16 +4,20 @@ from django.core.paginator              import Paginator
 from django.contrib.auth.decorators     import login_required
 from django.core.exceptions             import ValidationError
 from django.http                        import QueryDict
+from django.db.models.query             import QuerySet
 
 from rest_framework             import status
 from rest_framework.response    import Response
 from rest_framework.views       import APIView
 from rest_framework.generics    import ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics    import CreateAPIView, RetrieveDestroyAPIView, DestroyAPIView
 
 from .models        import Question, Answer
 from .forms         import QuestionForm, AnswerForm
 from .serializers   import QuestionSerializer, AnswerSerializer
 from .permissions   import IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly, IsStaffOrReadOnly
+from .permissions   import IsAuthorOrStaffOrReadOnly, IsAuthenticated, AllowAny
+
 
 import logging 
 
@@ -96,7 +100,7 @@ def question_create(request):
     elif request.method == 'POST':
         # 시리얼라이저 생성
         question_serializer = QuestionSerializer(data=request.POST)
-
+        print(request.POST)
         if question_serializer.is_valid():  # 내용 검사
             question_serializer.save()  # 저장
             logger.info("POST access BOARD_QUESTION Creation",
@@ -128,15 +132,11 @@ def question_create(request):
 class BoardAPIView(ListAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
-
-    def perform_create(self, serializer):
-        # print("BoardAPIView_perform_create")  # PROCESS CHEK
-        serializer.save(user=self.request.user)
-
+    permission_classes = [IsAuthenticatedOrReadOnly] #
+    
     def list(self, request, *args, **kwargs):
-
-        # print("BoardAPIView_list")  # PROCESS CHEK
+        
+        print("BoardAPIView_list")  # PROCESS CHEK
         # print("BoardAPIView_list_self.get_queryset : ", self.get_queryset())  # PROCESS CHEK
         queryset = self.filter_queryset(self.get_queryset())
         # print("BoardAPIView_list_queryset : ", queryset)  # PROCESS CHEK
@@ -149,9 +149,23 @@ class BoardAPIView(ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+
+class BoardCreateView(CreateAPIView):
+
+    # print("BoardAPIView")  # PROCESS CHEK
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated] #
+
+    def perform_create(self, serializer):
+
+        # print("BoardAPIView_perform_create")  # PROCESS CHECK
+        serializer.save(user=self.request.user)
+
+
     def create(self, request, *args, **kwargs):
 
-        # print("BoardAPIView_create")  # PROCESS CHEK
+        # print("BoardCreateAPIView_create")  # PROCESS CHECK
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -160,36 +174,43 @@ class BoardAPIView(ListAPIView):
 
 
 class BoardDetailView(RetrieveUpdateDestroyAPIView):
+    print("BoardDetailView") # PROCESS CHECK
+    
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
+    permission_classes = [IsAuthorOrStaffOrReadOnly]
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     instance.hit += 1 # 조회수 1 증가
-    #     instance.save()
-    #     serializer = self.get_serializer(instance)
-    #     return Response(serializer.data)
 
-    def update(self, request, * args, **kwargs):
-        partial = kwargs.pop('partial', False)
+    def retrieve(self, request, *args, **kwargs):
+        
         instance = self.get_object()
-        serializer = self.get_serializer(
-            instance, data=request.data, partial=partial)
+        # instance.hit += 1 # 조회수 1 증가
+        # instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+
+    def destroy(self, request, *args, **kwargs):
+        
+        print("BoardDetailView_destroy")  # PROCESS CHECK
+        instance = self.get_object()
+        self.perform_destroy(instance)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial',False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        if getattr(instance, '_prefetched_object_cache', None):
-            instance._prefetched_object_cache = {}
-
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._perfetched_objects_cache = {}
+        
         return Response(serializer.data)
-
+    
     def partial_update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
