@@ -1,16 +1,16 @@
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+from django.contrib.auth    import authenticate, login
+from django.shortcuts       import render, redirect
 from django.core.exceptions import ValidationError
 
-from rest_framework import status, generics, serializers
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework                         import status, generics, serializers
+from rest_framework.response                import Response
+from rest_framework.views                   import APIView
+from rest_framework.permissions             import IsAuthenticated
+from rest_framework_simplejwt.serializers   import TokenObtainPairSerializer
 
-from .serializers import UserSerializer, SignInSerializer, SignUpSerializer
-from .models import User, update_last_login
-from .exceptions import CustomValidationError
+from .serializers   import UserSerializer, SignInSerializer, SignUpSerializer
+from .models        import User, update_last_login
+from .exceptions    import CustomValidationError
 
 
 
@@ -71,6 +71,7 @@ class LogInGenericAPIView(generics.GenericAPIView):
             ) 
 
             #쿠키데이터 저장
+            res.set_cookie("user", user, httponly=True)
             res.set_cookie("access", access_token, httponly=True)
             res.set_cookie("refresh", refresh_token, httponly=True)
 
