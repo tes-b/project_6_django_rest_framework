@@ -30,7 +30,6 @@ def index(request):
     paginator = Paginator(question_list, 10)  # 페이지당 10개씩 보여주기
     page_obj = paginator.get_page(page)
     context = {'question_list': page_obj}
-    logger.info("GET access Board List", extra={'request': request})
 
     return render(request, 'board/question_list.html', context)
 
@@ -60,10 +59,11 @@ def answer_create(request, question_id):  # 둘 중 하나 쓰면 됨.
 
         if answer_serializer.is_valid():  # 내용 검사
             answer_serializer.save()  # 저장
+            logger.info('POST answer created', extra={'request': request})
+
         else:  # 내용에 문제 있을 때
             raise ValidationError(answer_serializer.errors)
-        logger.info("POST access BOARD_ANSWER Creation",
-                    extra={'request': request})
+
 
         return redirect('board:detail', question_id=question.id)
 
@@ -103,8 +103,8 @@ def question_create(request):
         print(request.POST)
         if question_serializer.is_valid():  # 내용 검사
             question_serializer.save()  # 저장
-            logger.info("POST access BOARD_QUESTION Creation",
-                        extra={'request': request})
+            logger.info('POST question created', extra={'request': request})
+
         else:
             raise ValidationError(question_serializer.errors)
 
@@ -147,6 +147,8 @@ class BoardAPIView(ListAPIView):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
+        logger.info('Board list', extra={'request': request})
+
         return Response(serializer.data)
 
 
@@ -170,6 +172,8 @@ class BoardCreateView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
+        logger.info('Create board', extra={'request': request})
+
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
@@ -195,7 +199,7 @@ class BoardDetailView(RetrieveUpdateDestroyAPIView):
         print("BoardDetailView_destroy")  # PROCESS CHECK
         instance = self.get_object()
         self.perform_destroy(instance)
-
+        logger.info('Destroy board', extra={'request': request})
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     
@@ -208,9 +212,10 @@ class BoardDetailView(RetrieveUpdateDestroyAPIView):
 
         if getattr(instance, '_prefetched_objects_cache', None):
             instance._perfetched_objects_cache = {}
-        
+        logger.info('Update board', extra={'request': request})
         return Response(serializer.data)
     
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
+        logger.info('Partial update board', extra={'request': request})
         return self.update(request, *args, **kwargs)
