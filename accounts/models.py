@@ -50,7 +50,7 @@ class User(AbstractUser): # Add Custom indexes by 태섭
     
     username = models.CharField(max_length=30, unique=True, null=False, blank=False)
     age = models.IntegerField(blank=True, null=True)
-    gender = models.CharField(max_length=10, null=True, choices=[('Male','male'),('Female','female'),('Other','other')])
+    gender = models.CharField(max_length=10, null=True, choices=[('male','male'),('female','female'),('other','other')])
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
