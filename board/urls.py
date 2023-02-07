@@ -12,4 +12,6 @@ urlpatterns = [
     path('api/list/', views.BoardAPIView.as_view(), name = 'api/index'),
     path('api/create/', views.BoardCreateView.as_view(), name = 'api/create'),
     path('api/<int:pk>/', views.BoardDetailView.as_view(),  name = 'api/detail'),
+    path('api/<int:pk>/answer/', views.AnswerCreateView.as_view(),  name = 'api/create/answer'),
+    # path('api/<int:pk>/answer/<int:pk>', views.AnswerCreateView.as_view(),  name = 'api/delete/answer'),
 ]

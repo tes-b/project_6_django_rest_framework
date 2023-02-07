@@ -99,7 +99,7 @@ class TestBoard(APITestCase):
         self.refresh = RefreshToken.for_user(self.user)
         self.client.credentials(HTTP_AUTHORIZATION = f'Bearer {self.refresh.access_token}')
 
-        self.create_question_url = "/board/api/1/"
+        self.create_question_url = f"/board/api/{self.question.id}/"
         self.response = self.client.delete(self.create_question_url, format='json')
         self.assertEqual(self.response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -110,7 +110,7 @@ class TestBoard(APITestCase):
         self.refresh = RefreshToken.for_user(self.user_2)
         self.client.credentials(HTTP_AUTHORIZATION = f'Bearer {self.refresh.access_token}')
 
-        self.create_question_url = "/board/api/1/"
+        self.create_question_url = f"/board/api/{self.question.id}/"
         self.response = self.client.delete(self.create_question_url, format='json')
         self.assertEqual(self.response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -156,4 +156,57 @@ class TestBoard(APITestCase):
         
     #     self.create_question_url = "/board/api/1/"
     #     self.response = self.client.put(self.create_question_url, data, format='json')
+    #     self.assertEqual(self.response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+    # 답변 작성 성공
+    def test_answer_create_success(self):
+        print("TestBoard_create_success")
+        self.refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION = f'Bearer {self.refresh.access_token}')
+
+        data = {
+            "author_id":self.user.id,
+            "question_id":self.question.id,
+            "content":"content"
+        }
+
+        self.create_question_url = f"/board/api/{self.question.id}/answer/"
+        self.response = self.client.post(self.create_question_url, data=data, format='json')
+        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
+
+
+    # # 답변 작성 실패 (로그인 안함)
+    # def test_answer_create_fail(self):
+    #     print("TestBoard_create_fail")
+    #     data = {
+    #         "author_id":self.user.id,
+    #         "title":"title",
+    #         "content":"content"
+    #     }
+
+    #     self.create_question_url = "/board/api/create/"
+    #     self.response = self.client.post(self.create_question_url, data=data, format='json')
+    #     self.assertEqual(self.response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+    # # 답변 삭제 성공 (작성자)
+    # def test_answer_delete_success(self):
+    #     print("TestBoard_delete_success")
+    #     self.refresh = RefreshToken.for_user(self.user)
+    #     self.client.credentials(HTTP_AUTHORIZATION = f'Bearer {self.refresh.access_token}')
+
+    #     self.create_question_url = "/board/api/1/"
+    #     self.response = self.client.delete(self.create_question_url, format='json')
+    #     self.assertEqual(self.response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+    # # 답변 삭제 실패 (작성자 아님)
+    # def test_answer_delete_fail(self):
+    #     print("TestBoard_delete_fail")
+    #     self.refresh = RefreshToken.for_user(self.user_2)
+    #     self.client.credentials(HTTP_AUTHORIZATION = f'Bearer {self.refresh.access_token}')
+
+    #     self.create_question_url = "/board/api/1/"
+    #     self.response = self.client.delete(self.create_question_url, format='json')
     #     self.assertEqual(self.response.status_code, status.HTTP_401_UNAUTHORIZED)

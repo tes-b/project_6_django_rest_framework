@@ -219,3 +219,44 @@ class BoardDetailView(RetrieveUpdateDestroyAPIView):
         kwargs['partial'] = True
         logger.info('Partial update board', extra={'request': request})
         return self.update(request, *args, **kwargs)
+
+
+class AnswerCreateView(CreateAPIView):
+
+    print("AnswerCreateView")  # PROCESS CHEK
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+    permission_classes = [IsAuthenticated] #
+
+    def perform_create(self, serializer):
+
+        # print("BoardAPIView_perform_create")  # PROCESS CHECK
+        serializer.save(user=self.request.user)
+
+
+    def create(self, request, *args, **kwargs):
+
+        # print("BoardCreateAPIView_create")  # PROCESS CHECK
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        logger.info('Create answer', extra={'request': request})
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+# class AnswerDestroyView(DestroyAPIView):
+#     # print("AnswerDestroyView") # PROCESS CHECK
+    
+#     queryset = Answer.objects.all()
+#     serializer_class = AnswerSerializer
+#     permission_classes = [IsAuthorOrStaffOrReadOnly]
+
+#     def destroy(self, request, *args, **kwargs):
+        
+#         # print("AnswerDestroyView_destroy")  # PROCESS CHECK
+#         instance = self.get_object()
+#         self.perform_destroy(instance)
+#         logger.info('Destroy answer', extra={'request': request})
+#         return Response(status=status.HTTP_204_NO_CONTENT)
