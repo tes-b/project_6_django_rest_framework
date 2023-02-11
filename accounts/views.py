@@ -12,6 +12,9 @@ from .serializers   import UserSerializer, SignInSerializer, SignUpSerializer
 from .models        import User, update_last_login
 from .exceptions    import CustomValidationError
 
+import logging 
+
+logger = logging.getLogger('json_logger')
 
 
 # 회원가입
@@ -37,7 +40,17 @@ class UserSignUpView(generics.CreateAPIView):
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
+        
         return redirect('index')
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        logger.info('POST signup', extra={'request': request})
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 
