@@ -13,9 +13,9 @@ urlpatterns = [
     path('signup/', views.SignUpAPIView.as_view(), name = 'signup'),
 
     # API
-    path('api/login/',views.LogInGenericAPIView.as_view()),
-    path('api/signup/',views.UserSignUpView.as_view()),
-    path('api/<int:pk>/withdraw/',views.WithdrawalAPIView.as_view()),
+    path('api/login/',views.LogInGenericAPIView.as_view(), name='api/login'),
+    path('api/signup/',views.UserSignUpView.as_view(), name='api/signup'),
+    path('api/<int:pk>/withdraw/',views.WithdrawalAPIView.as_view(), name='api/withdraw'),
     # path('api/login/', views.LogInGenericAPIView.as_view(), name='login')
 
 

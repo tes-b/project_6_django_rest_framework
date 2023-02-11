@@ -35,13 +35,10 @@ class UserSignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = SignUpSerializer
 
-    # def post(self, request, *args, **kwargs):
-    #     print("POST : ", request.data)
-    #     serializer = self.get_serializer(data=request.data, many=True)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def post(self, *args, **kwargs):
+        super().post(*args, **kwargs)
+        return redirect('index')
+
 
 
 # 로그인
