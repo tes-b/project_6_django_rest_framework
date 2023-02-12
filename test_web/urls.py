@@ -25,5 +25,7 @@ urlpatterns = [
     # restapi
     path('api-auth/', include('rest_framework.urls')),
     # dashboard
-    path('dashboard/', include('dashboard.urls'))
+    path('dashboard/', include('dashboard.urls')),
+    path('log/', include('log.urls')),
+
 ]

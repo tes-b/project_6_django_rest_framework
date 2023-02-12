@@ -70,6 +70,8 @@ INSTALLED_APPS = [
     'board.apps.BoardConfig',
     'accounts.apps.AccountsConfig',
     'dashboard.apps.DashboardConfig',
+    "log.apps.LogConfig",
+
 ]
 
 MIDDLEWARE = [
