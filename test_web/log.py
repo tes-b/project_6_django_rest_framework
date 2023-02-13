@@ -5,7 +5,7 @@ import json_log_formatter
 from django.http import HttpRequest
 from time import localtime, strftime
 from cryptography.fernet import Fernet
-from logs.decryption import json_record
+# from logs.decryption import json_record
 from cryptography.fernet import Fernet
 import environ
 import os
@@ -14,7 +14,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(DEBUG=(bool, True))
 environ.Env.read_env(env_file=os.path.join(BASE_DIR, ".env"))
-key = env('FERNET_KEY')
+# key = env('FERNET_KEY')
 
 class CustomisedJSONFormatter(json_log_formatter.JSONFormatter):
 
