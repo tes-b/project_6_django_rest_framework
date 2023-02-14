@@ -83,8 +83,10 @@ class SignInSerializer(serializers.Serializer):
             token = TokenObtainPairSerializer.get_token(user)
             refresh = str(token)
             access = str(token.access_token)
+            
             data = {
                 'user': user.username,
+                'user_id': user.pk,
                 'refresh': refresh,
                 'access': access,
             }

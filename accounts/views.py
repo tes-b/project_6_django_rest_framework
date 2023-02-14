@@ -67,11 +67,13 @@ class LogInGenericAPIView(generics.GenericAPIView):
         if serializer.is_valid(raise_exception=True):
             print("POST VALID : ", serializer)
             user = serializer.validated_data['user']
+            user_id = serializer.validated_data['user_id']
             access_token = serializer.validated_data['access']
             refresh_token = serializer.validated_data['refresh']
             res = Response(
                 {
                     "user": user,
+                    "user_id": user_id,
                     "token": {
                         "refresh": refresh_token,
                         "access": access_token,
