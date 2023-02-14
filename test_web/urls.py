@@ -32,9 +32,7 @@ schema_view_v1 = get_schema_view(
     ),
     validators=['flex'],
     public=True,
-    permission_classes=(AllowAny,),
-
-
+    # permission_classes=(AllowAny,),
 )
 
 
