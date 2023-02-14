@@ -1,6 +1,7 @@
 # whdf_cp2
 
 [페이지 링크](http://3.38.47.74/)
+
 [API 설명](http://3.38.47.74/swagger)
 
 ## 프로젝트 
@@ -25,15 +26,15 @@ DRF를 사용하여 REST API를 만들고 배포
 ## 사용방법
 -------------
 * 레포지토리 클론
-  $ git clone https://github.com/tes-b/whdf_cp2.git
+  ```$ git clone https://github.com/tes-b/whdf_cp2.git```
 * DB생성
-  mysql> create database <db name> ;
+  ```mysql> create database <db name> ;```
 * .env 파일 DB정보 설정
   '''.env파일을 이용하여 환경변수 설정한다'''
   DB_NAME='DB이름'
   DB_USER='유저아이디'        
   DB_PASSWORD='비밀번호'
 * 패키지 설치
-  '''conda 이용하여 가상환경 생성 후 패키지 설치'''
-  conda create --name [이름] python=3.9.16
-  conda env create --file conda_requirements.yaml
+  conda 이용하여 가상환경 생성 후 패키지 설치
+  ```conda create --name [이름] python=3.9.16```
+  ```conda env create --file conda_requirements.yaml```
