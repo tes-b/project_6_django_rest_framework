@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'dashboard.apps.DashboardConfig',
     "log.apps.LogConfig",
+    'drf_yasg',
 
 ]
 

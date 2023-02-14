@@ -43,4 +43,5 @@ dependencies:
     - pyjwt==1.7.1
     - json-log-formatter=0.5.1
     - cryptography=39.0.0
+    - drf-yasg=2.3.3
 prefix: /home/tesb/anaconda3/envs/cp2

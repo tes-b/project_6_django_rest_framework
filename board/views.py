@@ -18,7 +18,7 @@ from .serializers   import QuestionSerializer, AnswerSerializer
 from .permissions   import IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly, IsStaffOrReadOnly
 from .permissions   import IsAuthorOrStaffOrReadOnly, IsAuthenticated, AllowAny
 
-
+from drf_yasg.utils import swagger_auto_schema
 import logging 
 
 logger = logging.getLogger('json_logger')
@@ -133,7 +133,7 @@ class BoardAPIView(ListAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticatedOrReadOnly] #
-    
+    @swagger_auto_schema(tags=['list'],)
     def list(self, request, *args, **kwargs):
         
         print("BoardAPIView_list")  # PROCESS CHEK
@@ -158,7 +158,7 @@ class BoardCreateView(CreateAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated] #
-
+    #  @swagger_auto_schema()
     def perform_create(self, serializer):
 
         # print("BoardAPIView_perform_create")  # PROCESS CHECK

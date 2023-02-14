@@ -11,9 +11,9 @@ import environ
 import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-env = environ.Env(DEBUG=(bool, True))
-environ.Env.read_env(env_file=os.path.join(BASE_DIR, ".env"))
+# BASE_DIR = Path(__file__).resolve().parent.parent
+# env = environ.Env(DEBUG=(bool, True))
+# environ.Env.read_env(env_file=os.path.join(BASE_DIR, ".env"))
 # key = env('FERNET_KEY')
 
 class CustomisedJSONFormatter(json_log_formatter.JSONFormatter):

@@ -1,7 +1,7 @@
-# from cryptography.fernet import Fernet
-# import environ
-# import os
-# from pathlib import Path
+from cryptography.fernet import Fernet
+import environ
+import os
+from pathlib import Path
 
 # BASE_DIR = Path(__file__).resolve().parent.parent
 # env = environ.Env(DEBUG=(bool, True))
