@@ -1,4 +1,4 @@
-# whdf_cp2
+# project 6 django rest framework
 
 [페이지 링크](http://3.38.47.74/)
 
