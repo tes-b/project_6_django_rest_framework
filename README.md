@@ -6,20 +6,12 @@
 -------------
 DRF를 사용하여 REST API를 만들고 배포하는 팀 프로젝트
 
-## API 주요 기능
+## 주요 기능
 -------------
 * 회원가입, 회원목록, API접근을 위한 jwt발급 등 회원정보 처리
 * 질문글과 답변글 CRUD 기능(Create, Read, Update, Delete)
 * 회원들의 활동에 대한 통계 Dashboard
-* 회원들의 활동에 대한 Log 기능구현
-
-## 그 외
--------------
-* username과 password를 입력해 jwt 발급
-* API에 대한 권한 설정
-* 질문글 수정은 본인만 가능, 삭제는 본인과 staff만 가능
-* App을 내부적으로 테스트하는 기능
-* 커스터마이징 웹 제작
+* 회원들의 활동에 대한 Log 기능
 
 ![DRF 프로젝트 보고서](https://user-images.githubusercontent.com/109839413/233831238-557d04e6-d7a6-4408-95d0-32c548ea2b06.png)
 ![DRF 프로젝트 보고서 (1)](https://user-images.githubusercontent.com/109839413/233831163-66d3d062-824b-4df2-b640-4dd9b270d6f3.png)
