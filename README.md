@@ -15,7 +15,7 @@ DRF를 사용하여 REST API를 만들고 배포하는 팀 프로젝트
 * 회원들의 활동에 대한 통계 Dashboard
 * 회원들의 활동에 대한 Log 기능
 
-## 
+## 프레젠테이션  
 ![DRF 프로젝트 보고서](https://user-images.githubusercontent.com/109839413/233831238-557d04e6-d7a6-4408-95d0-32c548ea2b06.png)
 ![DRF 프로젝트 보고서 (1)](https://user-images.githubusercontent.com/109839413/233831163-66d3d062-824b-4df2-b640-4dd9b270d6f3.png)
 ![DRF 프로젝트 보고서 (2)](https://user-images.githubusercontent.com/109839413/233831167-abbc0ad0-b6e4-4b8e-a0ec-2a15c3ea8cd1.png)
